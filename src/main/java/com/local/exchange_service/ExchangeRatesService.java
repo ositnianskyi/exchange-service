@@ -76,10 +76,11 @@ public class ExchangeRatesService {
     @Retryable(value = RuntimeException.class, maxAttempts = 3)
     @Scheduled(fixedRateString = "${update.exchange.scheduled.rate}")
     protected void fetchExchangeRates() {
+        var response = exchangeApi.getExchangeRates();
+        //TODO add log to DB here
+
         try {
             updateLock.lock();
-            var response = exchangeApi.getExchangeRates();
-            //TODO add log to DB here
 
             var latestResponseRates = Optional.ofNullable(latestResponse).map(IExchangeRates::rates);
             this.latestResponse = response;
