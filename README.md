@@ -4,6 +4,10 @@
 
 - Register in service https://openexchangerates.org/signup/free and get App Id.
 - Set App Id to property `external.openexchangerates.appId` in [properties file](src/main/resources/application.properties)
+- Run PostgreSQL database:
+  ```
+  docker-compose up -d
+  ```
 - Build project:
   ```
   ./gradlew build  
@@ -13,6 +17,11 @@
   ./gradlew bootRun
   ```
 
+## Tear down
+- Stop PostgreSQL database:
+  ```
+  docker-compose down
+  ```
 ## APIs
 - Get current currencies list:
     ```

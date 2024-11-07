@@ -34,10 +34,10 @@ public class OpenExchangeRatesApiService implements IExchangeApiService {
 
     public IExchangeRates getExchangeRates() {
         try {
-            ResponseEntity<ExchangeRates> response = restTemplate.getForEntity(getLatestRateUrl.toUriString(), ExchangeRates.class);
+            ResponseEntity<ExchangeRatesResponse> response = restTemplate.getForEntity(getLatestRateUrl.toUriString(), ExchangeRatesResponse.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
-                ExchangeRates body = response.getBody();
+                ExchangeRatesResponse body = response.getBody();
                 logger.info("Fetched exchange rates:" + body);
                 return body;
             } else {

@@ -5,7 +5,7 @@ import com.local.exchange_service.interfaces.IExchangeRates;
 import java.math.BigDecimal;
 import java.util.Map;
 
-public record ExchangeRatesResponse(
+public record ExchangeRatesResponse (
         long timestamp,
         String base,
         Map<String, BigDecimal> rates

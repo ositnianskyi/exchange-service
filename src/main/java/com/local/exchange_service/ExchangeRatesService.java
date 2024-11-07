@@ -1,6 +1,7 @@
 package com.local.exchange_service;
 
 import com.local.exchange_service.interfaces.IExchangeApiService;
+import com.local.exchange_service.interfaces.IExchangeLoggingService;
 import com.local.exchange_service.interfaces.IExchangeRates;
 import com.local.exchange_service.model.ExchangeRates;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class ExchangeRatesService {
 
     private final IExchangeApiService exchangeApi;
+    private final IExchangeLoggingService exchangeLoggingService;
     private final long updateLockTimeout;
     private final int exchangeScale;
     private final ReentrantLock updateLock = new ReentrantLock(true);
@@ -28,9 +30,11 @@ public class ExchangeRatesService {
 
     @Autowired
     public ExchangeRatesService(IExchangeApiService exchangeApi,
+                                IExchangeLoggingService exchangeLoggingService,
                                 @Value("${exchange.update.timeout}") long updateLockTimeout,
                                 @Value("${exchange.scale}") int exchangeScale) {
         this.exchangeApi = exchangeApi;
+        this.exchangeLoggingService = exchangeLoggingService;
         this.updateLockTimeout = updateLockTimeout;
         this.exchangeScale = exchangeScale;
     }
@@ -77,21 +81,19 @@ public class ExchangeRatesService {
     @Scheduled(fixedRateString = "${update.exchange.scheduled.rate}")
     protected void fetchExchangeRates() {
         var response = exchangeApi.getExchangeRates();
-        //TODO add log to DB here
 
         try {
             updateLock.lock();
 
-            var latestResponseRates = Optional.ofNullable(latestResponse).map(IExchangeRates::rates);
             this.latestResponse = response;
-            if (!latestResponseRates.equals(Optional.of(response.rates())) // check is rates updated
-                    && !CollectionUtils.isEmpty(exchangeRatesMap.keySet()) // check is current currencies is not empty
-            ) {
+            if (!CollectionUtils.isEmpty(exchangeRatesMap.keySet())) { // check is current currencies is not empty
                 this.exchangeRatesMap = buildExchangeRatesMap(exchangeRatesMap.keySet());
             }
         } finally {
             updateLock.unlock();
         }
+
+        exchangeLoggingService.logCurrencyRate(response);
     }
 
     protected Map<String, IExchangeRates> buildExchangeRatesMap(Set<String> currencies) {
