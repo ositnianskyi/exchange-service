@@ -44,11 +44,20 @@ This service is designed to manage and persist foreign exchange rates. It integr
     ["BTC","USD","CAD","UAH"]
     ```
 
-- Get currency exchange rates to base currency:
-    ```
-    curl -X GET http://localhost:8080/exchange-rates?base=UAH
-    ```
-    Response:
-    ```
-    {"timestamp":1730916000,"baseCurrency":"UAH","rates":{"BTC":3.23723E-7,"USD":0.024120926696,"CAD":0.033626766819,"UAH":1}}
-    ```
+  - Get currency exchange rates to base currency:
+      ```
+      curl -X GET 'http://localhost:8080/exchange-rates?base=UAH'
+      ```
+      Response:
+      ```
+      {
+        "timestamp":1731085200,
+        "baseCurrency":"UAH",
+        "rates":{
+          "EUR":0.0226056749,
+          "USD":0.0242108287,
+          "CAD":0.0337090273,
+          "UAH":1
+        }
+      }
+      ```
