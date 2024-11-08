@@ -1,4 +1,5 @@
 # Currency exchange service
+This service is designed to manage and persist foreign exchange rates. It integrates with an external API (OpenExchangeRates) to fetch the latest exchange rates, provides APIs for adding and retrieving currencies, and logs the exchange rates to a database. The service can be used as a free unlimited exchange rates source based on OpenExchangeRates API with AppId created for Free Plan with rate limit 1000 requests per month.
 
 # How to run
 
